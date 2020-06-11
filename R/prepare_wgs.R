@@ -44,14 +44,24 @@ getAlleleCounts = function(bam.file, output.file, g1000.loci, min.base.qual=20, 
 #' @param seed A seed to be set for when randomising the alleles.
 #' @author dw9, sd11
 #' @export
-getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix, normalAlleleCountsFile.prefix, figuresFile.prefix, BAFnormalFile, BAFmutantFile, logRnormalFile, logRmutantFile, combinedAlleleCountsFile, chr_names, g1000file.prefix, minCounts=NA, samplename="sample1", seed=as.integer(Sys.time())) {
+getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix, 
+                          normalAlleleCountsFile.prefix, 
+                          figuresFile.prefix, 
+                          BAFnormalFile, 
+                          BAFmutantFile, 
+                          logRnormalFile, 
+                          logRmutantFile, 
+                          combinedAlleleCountsFile, 
+                          chr_names, 
+                          g1000file.prefix,
+                          minCounts=NA, samplename="sample1", seed=as.integer(Sys.time()),chr_prefixed=FALSE) {
   
   set.seed(seed)
   
-  input_data = concatenateAlleleCountFiles(tumourAlleleCountsFile.prefix, ".txt", length(chr_names))
-  normal_input_data = concatenateAlleleCountFiles(normalAlleleCountsFile.prefix, ".txt", length(chr_names))
+  input_data = concatenateAlleleCountFiles(tumourAlleleCountsFile.prefix, ".txt", length(chr_names),chr_prefixed)
+  normal_input_data = concatenateAlleleCountFiles(normalAlleleCountsFile.prefix, ".txt", length(chr_names),chr_prefixed)
   allele_data = concatenateG1000SnpFiles(g1000file.prefix, ".txt", length(chr_names), chr_names)
-  
+  print(paste("CHROMS:",chr_names))
   # Synchronise all the data frames
   chrpos_allele = paste(allele_data[,1], "_", allele_data[,2], sep="")
   chrpos_normal = paste(normal_input_data[,1], "_", normal_input_data[,2], sep="")
@@ -139,7 +149,7 @@ getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix, normalAlleleCountsFile
     	ch[[i]] = temp[1]:temp[length(temp)]
     }
   }
-  
+  print("running ASCAT")
   ascat.bc = list(Tumor_LogR=as.data.frame(tumor.LogR[,3]), Tumor_BAF=as.data.frame(tumor.BAF[,3]), 
                   Germline_LogR=as.data.frame(germline.LogR[,3]), Germline_BAF=as.data.frame(germline.BAF[,3]),
                   Tumor_LogR_segmented=NULL, Tumor_BAF_segmented=NULL, Tumor_counts=NULL, Germline_counts=NULL,
@@ -389,7 +399,7 @@ gc.correct.wgs = function(Tumour_LogR_file, outfile, correlations_outfile, gc_co
 #' @author sd11
 #' @export
 prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname, g1000allelesprefix, g1000prefix, gccorrectprefix, 
-                       repliccorrectprefix, min_base_qual, min_map_qual, allelecounter_exe, min_normal_depth, nthreads, skip_allele_counting) {
+                       repliccorrectprefix, min_base_qual, min_map_qual, allelecounter_exe, min_normal_depth, nthreads, skip_allele_counting, chr_prefixed=FALSE) {
   
   requireNamespace("foreach")
   requireNamespace("doParallel")
@@ -413,10 +423,15 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
                       allelecounter.exe=allelecounter_exe)
     }
   }
-
+  print(paste("CHROMS:",chrom_names))
+  print("getBAFsAndLogRs")
   # Obtain BAF and LogR from the raw allele counts
-  getBAFsAndLogRs(tumourAlleleCountsFile.prefix=paste(tumourname,"_alleleFrequencies_chr", sep=""),
-                  normalAlleleCountsFile.prefix=paste(normalname,"_alleleFrequencies_chr", sep=""),
+  af_prefix = "_alleleFrequencies_chr"
+  if(chr_prefixed){
+    af_prefix = "_alleleFrequencies_"
+  }
+  getBAFsAndLogRs(tumourAlleleCountsFile.prefix=paste(tumourname,af_prefix, sep=""),
+                  normalAlleleCountsFile.prefix=paste(normalname,af_prefix, sep=""),
                   figuresFile.prefix=paste(tumourname, "_", sep=''),
                   BAFnormalFile=paste(tumourname,"_normalBAF.tab", sep=""),
                   BAFmutantFile=paste(tumourname,"_mutantBAF.tab", sep=""),
@@ -426,7 +441,8 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
                   chr_names=chrom_names,
                   g1000file.prefix=g1000prefix,
                   minCounts=min_normal_depth,
-                  samplename=tumourname)
+                  samplename=tumourname,chr_prefixed=chr_prefixed)
+  print("GC CORRECTION")
   # Perform GC correction
   gc.correct.wgs(Tumour_LogR_file=paste(tumourname,"_mutantLogR.tab", sep=""),
                  outfile=paste(tumourname,"_mutantLogR_gcCorrected.tab", sep=""),

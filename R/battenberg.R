@@ -51,7 +51,7 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
                       min_map_qual=35, calc_seg_baf_option=3, skip_allele_counting=F, skip_preprocessing=F, skip_phasing=F,
                       snp6_reference_info_file=NA, apt.probeset.genotype.exe="apt-probeset-genotype", apt.probeset.summarize.exe="apt-probeset-summarize", 
                       norm.geno.clust.exe="normalize_affy_geno_cluster.pl", birdseed_report_file="birdseed.report.txt", heterozygousFilter="none",
-                      prior_breakpoints_file=NULL) {
+                      prior_breakpoints_file=NULL,chr_prefixed=FALSE) {
   
   requireNamespace("foreach")
   requireNamespace("doParallel")
@@ -110,7 +110,8 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
                   allelecounter_exe=allelecounter_exe, 
                   min_normal_depth=min_normal_depth, 
                   nthreads=nthreads,
-                  skip_allele_counting=skip_allele_counting)
+                  skip_allele_counting=skip_allele_counting,
+                  chr_prefixed=FALSE)
       
       # Kill the threads
       parallel::stopCluster(clp)

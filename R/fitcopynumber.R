@@ -78,7 +78,9 @@ fit.copy.number = function(samplename, outputfile.prefix, inputfile.baf.segmente
   # For each chromosome 
   for(chr in chr.names){
     chr.BAF.data = baf_split[[chr]]
-    
+    if(chr == "chrX"){
+      chr = "chr23"
+    }
     # Skip the rest if there is no data for this chromosome
     if(nrow(chr.BAF.data)==0){ next }
     # Match segments with chromosome position
@@ -100,10 +102,14 @@ fit.copy.number = function(samplename, outputfile.prefix, inputfile.baf.segmente
     chr.logR.data = logr_split[[chr]]
     indices = match(chr.segmented.BAF.data[,2],chr.logR.data$Position)
     logR.data[[chr]] = chr.logR.data[indices[!is.na(indices)],]
+    print(names(logR.data))
     chr.segmented.logR.data = chr.logR.data[indices[!is.na(indices)],]
+    print(paste("SEGMENTED",chr))
     
+    print(head(chr.segmented.logR.data))
     # Append segmented LogR
     segs = rle(chr.segmented.BAF.data[,5])$lengths
+
     cum.segs = c(0,cumsum(segs))
     for(s in 1:length(segs)){
       chr.segmented.logR.data[(cum.segs[s]+1):cum.segs[s+1],3] = mean(chr.segmented.logR.data[(cum.segs[s]+1):cum.segs[s+1],3], na.rm=T)
@@ -146,7 +152,7 @@ fit.copy.number = function(samplename, outputfile.prefix, inputfile.baf.segmente
   for(ch in 1:length(chr.names)){
     chr.segs[[ch]] = which(logR.data[,1]==chr.names[ch])
   }
-  
+  print(names(chr.segs))
   if(use_preset_rho_psi){
     ascat_optimum_pair = list(rho=preset_rho, psi = preset_psi, ploidy = preset_psi)
   }else{

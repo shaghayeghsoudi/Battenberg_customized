@@ -54,31 +54,49 @@ getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix,
                           combinedAlleleCountsFile, 
                           chr_names, 
                           g1000file.prefix,
-                          minCounts=NA, samplename="sample1", seed=as.integer(Sys.time()),chr_prefixed=FALSE) {
+                          minCounts=NA, 
+                          samplename="sample1", 
+                          seed=as.integer(Sys.time()),
+                          chr_prefixed=FALSE,
+                          VERBOSE=FALSE) {
   
   set.seed(seed)
   
-  input_data = concatenateAlleleCountFiles(tumourAlleleCountsFile.prefix, ".txt", length(chr_names),chr_prefixed)
-  normal_input_data = concatenateAlleleCountFiles(normalAlleleCountsFile.prefix, ".txt", length(chr_names),chr_prefixed)
+  input_data = concatenateAlleleCountFiles(tumourAlleleCountsFile.prefix, ".txt", length(chr_names))
+  normal_input_data = concatenateAlleleCountFiles(normalAlleleCountsFile.prefix, ".txt", length(chr_names))
   allele_data = concatenateG1000SnpFiles(g1000file.prefix, ".txt", length(chr_names), chr_names)
-  print(paste("CHROMS:",chr_names))
+  if(VERBOSE){
+    print(paste("CHROMS:",chr_names))
+  }
   # Synchronise all the data frames
   chrpos_allele = paste(allele_data[,1], "_", allele_data[,2], sep="")
+  if(VERBOSE){
+    print("1/4")
+    print(head(allele_data))
+  }
   chrpos_normal = paste(normal_input_data[,1], "_", normal_input_data[,2], sep="")
+  if(VERBOSE){
+    print("2/4")
+    print(head(normal_input_data))
+  }
   chrpos_tumour = paste(input_data[,1], "_", input_data[,2], sep="")
+  if(VERBOSE){
+    print("3/4")
+    print(head(input_data))
+  }
   matched_data = Reduce(intersect, list(chrpos_allele, chrpos_normal, chrpos_tumour))
-
+  
   allele_data = allele_data[chrpos_allele %in% matched_data,]
   normal_input_data = normal_input_data[chrpos_tumour %in% matched_data,]
   input_data = input_data[chrpos_tumour %in% matched_data,]
-  
+
   # Clean up and reduce amount of unneeded data
   names(input_data)[1] = "CHR"
   names(normal_input_data)[1] = "CHR"
   
   normal_data = normal_input_data[,3:6]
   mutant_data = input_data[,3:6]
-  
+
   # Obtain depth for both alleles for tumour and normal
   len = nrow(normal_data)
   normCount1 = normal_data[cbind(1:len,allele_data[,3])]
@@ -119,7 +137,7 @@ getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix,
   mutantBAF[which(selector==0)] = mutCount1[which(selector==0)] / totalMutant[which(selector==0)]
   mutantBAF[which(selector==1)] = mutCount2[which(selector==1)] / totalMutant[which(selector==1)]
   
-  normalLogR = vector(length=n, mode="integer") #assume that normallogR is 0, and normalise mutantLogR to normalLogR	
+  normalLogR = vector(length=n, mode="integer") #assume that normallogR is 0, and normalise mutantLogR to normalLogR	#ToDo: for FFPE data this assumption is not ideal
   mutantLogR = totalMutant/totalNormal
   rm(selector)
   
@@ -129,7 +147,9 @@ getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix,
   tumor.BAF = data.frame(Chromosome=input_data$CHR[indices], Position=input_data$POS[indices], baf=mutantBAF)
   tumor.LogR = data.frame(Chromosome=input_data$CHR[indices], Position=input_data$POS[indices], samplename=log2(mutantLogR/mean(mutantLogR, na.rm=T)))	
   alleleCounts = data.frame(Chromosome=input_data$CHR[indices], Position=input_data$POS[indices], mutCountT1=mutCount1, mutCountT2=mutCount2, mutCountN1=normCount1, mutCountN2=normCount2)
-  
+  if(VERBOSE){
+    print("outputting logR and BAF data to disk")
+  }
   # Save data.frames to disk
   write.table(germline.BAF,file=BAFnormalFile, row.names=F, quote=F, sep="\t", col.names=c("Chromosome","Position",samplename))
   write.table(tumor.BAF,file=BAFmutantFile, row.names=F, quote=F, sep="\t", col.names=c("Chromosome","Position",samplename))
@@ -172,13 +192,15 @@ getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix,
 #' @param heterozygousFilter The cutoff where a SNP will be considered as heterozygous (default 0.01).
 #' @author dw9, sd11
 #' @export
-generate.impute.input.wgs = function(chrom, tumour.allele.counts.file, normal.allele.counts.file, output.file, imputeinfofile, is.male, problemLociFile=NA, useLociFile=NA, heterozygousFilter=0.1) {
+generate.impute.input.wgs = function(chrom, tumour.allele.counts.file, normal.allele.counts.file, output.file, imputeinfofile, is.male, problemLociFile=NA, useLociFile=NA, heterozygousFilter=0.1,chr_prefixed=FALSE) {
 
   # Read in the 1000 genomes reference file paths for the specified chrom
   impute.info = parse.imputeinfofile(imputeinfofile, is.male, chrom=chrom)
   chr_names = unique(impute.info$chrom)
+  print("chromosomes to impute:")
+  print(chr_names)
   chrom_name = parse.imputeinfofile(imputeinfofile, is.male)$chrom[chrom]
-  
+  print(chrom_name)
   #print(paste("GenerateImputeInput is.male? ", is.male,sep=""))
   #print(paste("GenerateImputeInput #impute files? ", nrow(impute.info),sep=""))
   
@@ -399,7 +421,7 @@ gc.correct.wgs = function(Tumour_LogR_file, outfile, correlations_outfile, gc_co
 #' @author sd11
 #' @export
 prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname, g1000allelesprefix, g1000prefix, gccorrectprefix, 
-                       repliccorrectprefix, min_base_qual, min_map_qual, allelecounter_exe, min_normal_depth, nthreads, skip_allele_counting, chr_prefixed=FALSE) {
+                       repliccorrectprefix, min_base_qual, min_map_qual, allelecounter_exe, min_normal_depth, nthreads, skip_allele_counting, chr_prefixed=FALSE, VERBOSE=FALSE) {
   
   requireNamespace("foreach")
   requireNamespace("doParallel")
@@ -408,6 +430,7 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
   if (!skip_allele_counting) {
     # Obtain allele counts for 1000 Genomes locations for both tumour and normal
     foreach::foreach(i=1:length(chrom_names)) %dopar% {
+      #use numbered chromosomes here rather than the names
       getAlleleCounts(bam.file=tumourbam,
                       output.file=paste(tumourname,"_alleleFrequencies_chr", i, ".txt", sep=""),
                       g1000.loci=paste(g1000allelesprefix, i, ".txt", sep=""),
@@ -423,8 +446,10 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
                       allelecounter.exe=allelecounter_exe)
     }
   }
-  print(paste("CHROMS:",chrom_names))
-  print("getBAFsAndLogRs")
+  if(VERBOSE){
+    print(paste("CHROMS:",chrom_names))
+    print("getBAFsAndLogRs")
+  }
   # Obtain BAF and LogR from the raw allele counts
   af_prefix = "_alleleFrequencies_chr"
   if(chr_prefixed){
@@ -441,8 +466,12 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
                   chr_names=chrom_names,
                   g1000file.prefix=g1000prefix,
                   minCounts=min_normal_depth,
-                  samplename=tumourname,chr_prefixed=chr_prefixed)
-  print("GC CORRECTION")
+                  samplename=tumourname,
+                  chr_prefixed=chr_prefixed,
+                  VERBOSE=VERBOSE)
+  if(VERBOSE){
+    print("GC CORRECTION")
+  }
   # Perform GC correction
   gc.correct.wgs(Tumour_LogR_file=paste(tumourname,"_mutantLogR.tab", sep=""),
                  outfile=paste(tumourname,"_mutantLogR_gcCorrected.tab", sep=""),

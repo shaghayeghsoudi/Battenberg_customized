@@ -112,14 +112,14 @@ concatenateBAFfiles<-function(inputStart, inputEnd, outputFile, no.chrs) {
 
 #' Function to concatenate allele counter output
 #' @noRd
-concatenateAlleleCountFiles = function(inputStart, inputEnd, no.chrs,chr_prefixed) {
+concatenateAlleleCountFiles = function(inputStart, inputEnd, no.chrs) {
   infiles = c()
   for(chrom in 1:no.chrs) {
-    if(chr_prefixed){
+    #if(chr_prefixed){
       filename = paste(inputStart, "chr", chrom, inputEnd, sep="")
-    }else{
-      filename = paste(inputStart, chrom, inputEnd, sep="")
-    }
+    #}else{
+      #filename = paste(inputStart, chrom, inputEnd, sep="")
+    #}
     # Only add files that exist and have data
     if(file.exists(filename) && file.info(filename)$size>0) {
       infiles = c(infiles, filename)

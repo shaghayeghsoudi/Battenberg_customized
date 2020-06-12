@@ -51,7 +51,7 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
                       min_map_qual=35, calc_seg_baf_option=3, skip_allele_counting=F, skip_preprocessing=F, skip_phasing=F,
                       snp6_reference_info_file=NA, apt.probeset.genotype.exe="apt-probeset-genotype", apt.probeset.summarize.exe="apt-probeset-summarize", 
                       norm.geno.clust.exe="normalize_affy_geno_cluster.pl", birdseed_report_file="birdseed.report.txt", heterozygousFilter="none",
-                      prior_breakpoints_file=NULL,chr_prefixed=FALSE) {
+                      prior_breakpoints_file=NULL,chr_prefixed=FALSE,VERBOSE=FALSE) {
   
   requireNamespace("foreach")
   requireNamespace("doParallel")
@@ -111,7 +111,7 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
                   min_normal_depth=min_normal_depth, 
                   nthreads=nthreads,
                   skip_allele_counting=skip_allele_counting,
-                  chr_prefixed=FALSE)
+                  chr_prefixed=chr_prefixed,VERBOSE=VERBOSE)
       
       # Kill the threads
       parallel::stopCluster(clp)
@@ -144,12 +144,13 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
     # Setup for parallel computing
     clp = parallel::makeCluster(nthreads)
     doParallel::registerDoParallel(clp)
-    
+    print("PHASING")
     # Reconstruct haplotypes 
     # mclapply(1:length(chrom_names), function(chrom) {
+    #uses numeric rather than chromosome names. Change? 
     foreach::foreach (chrom=1:length(chrom_names)) %dopar% {
       print(chrom)
-      
+      print(paste("HAPLOTYPING:",chrom))
       run_haplotyping(chrom=chrom, 
                       tumourname=tumourname, 
                       normalname=normalname, 
@@ -161,6 +162,7 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
   		                chrom_names=chrom_names,
   		                snp6_reference_info_file=snp6_reference_info_file,
   		                heterozygousFilter=heterozygousFilter)
+                      
     }#, mc.cores=nthreads)
     
     # Kill the threads as from here its all single core

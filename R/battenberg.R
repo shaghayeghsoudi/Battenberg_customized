@@ -171,7 +171,7 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
     #parallel::stopCluster(clp)
     
 
-    for(chrom in c(1:length(chrom_names)){
+    for(chrom in 1:length(chrom_names)){
       print(chrom)
       print(paste("HAPLOTYPING:",chrom))
       run_haplotyping(chrom=chrom, 

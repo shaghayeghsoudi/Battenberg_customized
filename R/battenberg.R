@@ -170,7 +170,6 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
     # Kill the threads as from here its all single core
     parallel::stopCluster(clp)
     
-  }
   
 
     # Combine all the BAF output into a single file

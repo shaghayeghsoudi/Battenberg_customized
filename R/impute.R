@@ -25,7 +25,9 @@ run.impute = function(inputfile, outputfile.prefix, is.male, imputeinfofile, imp
     # problem with SNPs on exactly the boundary. It does mean the first base on the first chromosome
     # cannot be phased
     for(b in 1:(length(boundaries)-1)){
-      cmd = paste(impute.exe,
+      out.log = paste0(outputfile.prefix, "_", boundaries[b]/1000, "K_", boundaries[b+1]/1000, "K.txt.stdout.log" )
+      err.log = paste0(outputfile.prefix, "_", boundaries[b]/1000, "K_", boundaries[b+1]/1000, "K.txt.stderr.log" )
+      cmd = paste0(impute.exe,
                   " -m ", impute.info[r,]$genetic_map,
                   " -h ", impute.info[r,]$impute_hap,
                   " -l ", impute.info[r,]$impute_legend,
@@ -34,10 +36,13 @@ run.impute = function(inputfile, outputfile.prefix, is.male, imputeinfofile, imp
                   " -Ne 20000", # Authors of impute2 mention that this parameter works best on all population types, thus hardcoded.
                   " -o ", outputfile.prefix, "_", boundaries[b]/1000, "K_", boundaries[b+1]/1000, "K.txt", 
                   " -phase", 
-                  " -seed ",
-                  " -os 2", sep="") # lowers computational cost by not imputing reference only SNPs
+                  " -seed ", seed,
+                  " -os 2",
+                  " > ", out.log,
+                  " 2> ", err.log ) # lowers computational cost by not imputing reference only SNPs
       print(paste("RUNNING:",cmd))
       system(cmd, wait=T)
+      q();
     }
   }
 }
@@ -143,6 +148,7 @@ combine.impute.output = function(inputfile.prefix, outputfile, is.male, imputein
 #' @export
 run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile, problemloci, impute_exe, min_normal_depth, chrom_names,
                            snp6_reference_info_file=NA, heterozygousFilter=NA) {
+  print("Running modified haplotyping")
   #uses numeric (1-23) chromosome names, should this change?
   af_prefix = "_alleleFrequencies_chr"
   imp_prefix = "_impute_input_chr"

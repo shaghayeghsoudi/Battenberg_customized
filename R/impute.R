@@ -42,7 +42,7 @@ run.impute = function(inputfile, outputfile.prefix, is.male, imputeinfofile, imp
                   " 2> ", err.log ) # lowers computational cost by not imputing reference only SNPs
       print(paste("RUNNING:",cmd))
       system(cmd, wait=T)
-      q();
+      
     }
   }
 }

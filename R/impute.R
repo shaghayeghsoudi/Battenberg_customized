@@ -187,7 +187,7 @@ run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile
              is.male=ismale,
              imputeinfofile=imputeinfofile,
              impute.exe=impute_exe,
-             region.size=5000000,
+             region.size=1000000,
              chrom=chrom)
 
   # As impute runs in windows across a chromosome we need to assemble the output

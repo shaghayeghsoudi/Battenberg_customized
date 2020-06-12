@@ -180,14 +180,14 @@ run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile
                                is.male=ismale,
                                heterozygousFilter=heterozygousFilter)
   }
-
+  region_size = 2500000
   # Run impute on the files
   run.impute(inputfile=paste(tumourname, imp_prefix, chrom, ".txt", sep=""),
              outputfile.prefix=paste(tumourname, imp_prefix_o, chrom, ".txt", sep=""),
              is.male=ismale,
              imputeinfofile=imputeinfofile,
              impute.exe=impute_exe,
-             region.size=1000000,
+             region.size=region_size,
              chrom=chrom)
 
   # As impute runs in windows across a chromosome we need to assemble the output
@@ -195,7 +195,7 @@ run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile
                         outputfile=paste(tumourname, imp_prefix_o, chrom, "_allHaplotypeInfo.txt", sep=""),
                         is.male=ismale,
                         imputeinfofile=imputeinfofile,
-                        region.size=5000000,
+                        region.size=region_size,
                         chrom=chrom)
 
   # If an allele counts file exists we assume this is a WGS sample and run the corresponding step, otherwise it must be SNP6

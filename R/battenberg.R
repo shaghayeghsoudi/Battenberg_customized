@@ -170,11 +170,11 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
     # Kill the threads as from here its all single core
     parallel::stopCluster(clp)
     
-
+  }
   
 
     # Combine all the BAF output into a single file
-    combine.baf.files(inputfile.prefix=paste(tumourname, "_chr", sep=""), 
+  combine.baf.files(inputfile.prefix=paste(tumourname, "_chr", sep=""), 
                       inputfile.postfix="_heterozygousMutBAFs_haplotyped.txt", 
                       outputfile=paste(tumourname, "_heterozygousMutBAFs_haplotyped.txt", sep=""),
                       no.chrs=length(chrom_names))

@@ -148,7 +148,7 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
     doParallel::registerDoParallel(clp)
     print("PHASING")
     # Reconstruct haplotypes 
-     mclapply(1:length(chrom_names), function(chrom) {
+
     #uses numeric rather than chromosome names. Change? 
     foreach::foreach (chrom=1:length(chrom_names)) %dopar% {
       #rint(chrom)
@@ -165,7 +165,7 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
   		                snp6_reference_info_file=snp6_reference_info_file,
   		                heterozygousFilter=heterozygousFilter)
                       
-    }#, mc.cores=nthreads)
+    }
     
     # Kill the threads as from here its all single core
     parallel::stopCluster(clp)

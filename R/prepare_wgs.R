@@ -221,6 +221,7 @@ generate.impute.input.wgs = function(chrom, tumour.allele.counts.file, normal.al
     rm(problemSNPs, badIndices)
   }
   
+  
   # filter 'good' SNPs (e.g. SNP6 positions)
   if((useLociFile != "NA") & (!is.na(useLociFile))) {
     goodSNPs = read.table(useLociFile, header=T, sep="\t", stringsAsFactors=F)
@@ -234,9 +235,16 @@ generate.impute.input.wgs = function(chrom, tumour.allele.counts.file, normal.al
   # Read in the allele counts and see which known SNPs are covered
   snp_data = read.table(tumour.allele.counts.file, comment.char="#", sep="\t", header=F, stringsAsFactors=F)
   normal_snp_data = read.table(normal.allele.counts.file, comment.char="#", sep="\t", header=F, stringsAsFactors=F)
+  print("tumour SNP")
+  print(head(snp_data))
+  print("normal SNP")
+  print(head(normal_snp_data))
   snp_data = cbind(snp_data, normal_snp_data)
+  print(head(snp_data))
   indices = match(known_SNPs$position, snp_data[,2])
   found_snp_data = snp_data[indices[!is.na(indices)],]
+  print(head(found_snp_data))
+  dim(found_snp_data)
   rm(snp_data)
   
   # Obtain BAF for this chromosome (note: this is quicker than reading in the whole genome BAF file generated in the earlier step)

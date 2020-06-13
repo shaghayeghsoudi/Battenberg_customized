@@ -205,15 +205,15 @@ run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile
   print(file.exists(paste(tumourname, af_prefix, chrom, ".txt", sep="")))
   if (file.exists(paste(tumourname, af_prefix, chrom, ".txt", sep=""))) {
     # WGS - Transform the impute output into haplotyped BAFs
-    if(chr_prefixed){
-      GetChromosomeBAFs(chrom=chrom,
-                      SNP_file=paste(tumourname, af_prefix, chrom, ".txt", sep=""),
-                      haplotypeFile=paste(tumourname, imp_prefix_o, chrom, "_allHaplotypeInfo.txt", sep=""),
-                      samplename=tumourname,
-                      outfile=paste(tumourname, "_", chrom, "_heterozygousMutBAFs_haplotyped.txt", sep=""),
-                      chr_names=chrom_names,
-                      minCounts=min_normal_depth)
-    }else{
+    #if(chr_prefixed){
+    #  GetChromosomeBAFs(chrom=chrom,
+    #                  SNP_file=paste(tumourname, af_prefix, chrom, ".txt", sep=""),
+    ##                  haplotypeFile=paste(tumourname, imp_prefix_o, chrom, "_allHaplotypeInfo.txt", sep=""),
+     #                 samplename=tumourname,
+     #                 outfile=paste(tumourname, "_", chrom, "_heterozygousMutBAFs_haplotyped.txt", sep=""),
+     #                 chr_names=chrom_names,
+     #                 minCounts=min_normal_depth)
+    #}else{
     GetChromosomeBAFs(chrom=chrom,
                       SNP_file=paste(tumourname, af_prefix, chrom, ".txt", sep=""),
                       haplotypeFile=paste(tumourname, imp_prefix_o, chrom, "_allHaplotypeInfo.txt", sep=""),
@@ -221,7 +221,7 @@ run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile
                       outfile=paste(tumourname, "_chr", chrom, "_heterozygousMutBAFs_haplotyped.txt", sep=""),
                       chr_names=chrom_names,
                       minCounts=min_normal_depth)
-    }
+    #}
   } else {
     print("SNP6 get BAFs")
     # SNP6 - Transform the impute output into haplotyped BAFs

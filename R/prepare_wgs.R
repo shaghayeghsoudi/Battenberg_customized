@@ -203,7 +203,7 @@ generate.impute.input.wgs = function(chrom, tumour.allele.counts.file, normal.al
   print(chrom_name)
   #print(paste("GenerateImputeInput is.male? ", is.male,sep=""))
   #print(paste("GenerateImputeInput #impute files? ", nrow(impute.info),sep=""))
-  
+  print(paste("reading in known SNPs from:",impute.info$impute_legend[1]))
   # Read in the known SNP locations from the 1000 genomes reference files
   known_SNPs = read.table(impute.info$impute_legend[1], sep=" ", header=T, stringsAsFactors=F)
   if(nrow(impute.info)>1){

@@ -160,7 +160,7 @@ run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile
   #}
   print(paste("checking for: ",paste(tumourname, af_prefix, chrom, ".txt", sep="")))
   if (file.exists(paste(tumourname, af_prefix, chrom, ".txt", sep=""))) {
-    print(paste0("generating impute input ",tumourname,af_prefix, chrom, ".txt"))
+    print(paste0("generating impute input from ",tumourname,af_prefix, chrom, ".txt"))
     generate.impute.input.wgs(chrom=chrom,
                               tumour.allele.counts.file=paste(tumourname,af_prefix, chrom, ".txt", sep=""),
                               normal.allele.counts.file=paste(normalname,af_prefix, chrom, ".txt", sep=""),

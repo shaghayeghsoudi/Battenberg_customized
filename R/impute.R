@@ -26,7 +26,6 @@ run.impute = function(inputfile, outputfile.prefix, is.male, imputeinfofile, imp
     # cannot be phased
     for(b in 1:(length(boundaries)-1)){
       out.log = paste0(outputfile.prefix, "_", boundaries[b]/1000, "K_", boundaries[b+1]/1000, "K.txt.stdout.log" )
-      err.log = paste0(outputfile.prefix, "_", boundaries[b]/1000, "K_", boundaries[b+1]/1000, "K.txt.stderr.log" )
       cmd = paste0(impute.exe,
                   " -m ", impute.info[r,]$genetic_map,
                   " -h ", impute.info[r,]$impute_hap,
@@ -38,8 +37,7 @@ run.impute = function(inputfile, outputfile.prefix, is.male, imputeinfofile, imp
                   " -phase", 
                   " -seed ", seed,
                   " -os 2",
-                  " > ", out.log,
-                  " 2> ", err.log ) # lowers computational cost by not imputing reference only SNPs
+                  " > ", out.log) # lowers computational cost by not imputing reference only SNPs
       print(paste("RUNNING:",cmd))
       system(cmd, wait=T)
       

@@ -241,6 +241,8 @@ generate.impute.input.wgs = function(chrom, tumour.allele.counts.file, normal.al
   print(head(normal_snp_data))
   snp_data = cbind(snp_data, normal_snp_data)
   print(head(snp_data))
+  print(paste("matching to KNOWN:"))
+  print(head(known_SNPs))
   indices = match(known_SNPs$position, snp_data[,2])
   found_snp_data = snp_data[indices[!is.na(indices)],]
   print(head(found_snp_data))

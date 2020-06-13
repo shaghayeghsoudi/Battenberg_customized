@@ -145,19 +145,20 @@ combine.impute.output = function(inputfile.prefix, outputfile, is.male, imputein
 #' @author sd11
 #' @export
 run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile, problemloci, impute_exe, min_normal_depth, chrom_names,
-                           snp6_reference_info_file=NA, heterozygousFilter=NA) {
+                           snp6_reference_info_file=NA, heterozygousFilter=NA,chr_prefixed = FALSE) {
   print("Running modified haplotyping")
   #uses numeric (1-23) chromosome names, should this change?
   af_prefix = "_alleleFrequencies_chr"
   imp_prefix = "_impute_input_chr"
   imp_prefix_o = "_impute_output_chr"
-  #if(chr_prefixed){
-  #  af_prefix = "_alleleFrequencies_"
-  #  imp_prefix = "_impute_input_"
-  #  imp_prefix_o = "_impute_output_"
-  #  print(paste("prefixed genome:",af_prefix,imp_prefix))
-  #}
+  if(chr_prefixed){
+    af_prefix = "_alleleFrequencies_"
+    imp_prefix = "_impute_input_"
+    imp_prefix_o = "_impute_output_"
+    print(paste("prefixed genome:",af_prefix,imp_prefix))
+  }
   if (file.exists(paste(tumourname, af_prefix, chrom, ".txt", sep=""))) {
+    print(paste0("generating impute input ",tumourname,af_prefix, chrom, ".txt"))
     generate.impute.input.wgs(chrom=chrom,
                               tumour.allele.counts.file=paste(tumourname,af_prefix, chrom, ".txt", sep=""),
                               normal.allele.counts.file=paste(normalname,af_prefix, chrom, ".txt", sep=""),
@@ -167,6 +168,7 @@ run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile
                               problemLociFile=problemloci,
                               useLociFile=NA)
   } else {
+    
     generate.impute.input.snp6(infile.germlineBAF=paste(tumourname, "_germlineBAF.tab", sep=""),
                                infile.tumourBAF=paste(tumourname, "_mutantBAF.tab", sep=""),
                                outFileStart=paste(tumourname, imp_prefix, sep=""),

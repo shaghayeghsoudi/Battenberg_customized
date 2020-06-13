@@ -247,6 +247,7 @@ generate.impute.input.wgs = function(chrom, tumour.allele.counts.file, normal.al
   BAFs[is.nan(BAFs)] = 0
   rm(nucleotides, ref_indices, alt_indices, found_snp_data, normal_snp_data)
   
+  print(head(BAFs))
   # Set the minimum level to use for obtaining genotypes
   minBaf = min(heterozygousFilter, 1.0-heterozygousFilter)
   maxBaf = max(heterozygousFilter, 1.0-heterozygousFilter)

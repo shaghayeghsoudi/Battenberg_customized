@@ -160,7 +160,8 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
                       min_normal_depth=min_normal_depth,
     	                chrom_names=chrom_names,
   		                snp6_reference_info_file=snp6_reference_info_file,
-  		                heterozygousFilter=heterozygousFilter)
+  		                heterozygousFilter=heterozygousFilter,
+                      chr_prefixed=chr_prefixed)
                       
     }
     

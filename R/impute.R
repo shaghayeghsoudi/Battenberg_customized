@@ -151,12 +151,14 @@ run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile
   af_prefix = "_alleleFrequencies_chr"
   imp_prefix = "_impute_input_chr"
   imp_prefix_o = "_impute_output_chr"
-  if(chr_prefixed){
-    af_prefix = "_alleleFrequencies_"
-    imp_prefix = "_impute_input_"
-    imp_prefix_o = "_impute_output_"
-    print(paste("prefixed genome:",af_prefix,imp_prefix))
-  }
+  #if(chr_prefixed){
+  #  af_prefix = "_alleleFrequencies_"
+  #  imp_prefix = "_impute_input_"
+  #  imp_prefix_o = "_impute_output_"
+  #  print(paste0("prefixed genome:",af_prefix,imp_prefix))
+  #  print(paste("checking for: ",paste(tumourname, af_prefix, chrom, ".txt", sep="")))
+  #}
+  print(paste("checking for: ",paste(tumourname, af_prefix, chrom, ".txt", sep="")))
   if (file.exists(paste(tumourname, af_prefix, chrom, ".txt", sep=""))) {
     print(paste0("generating impute input ",tumourname,af_prefix, chrom, ".txt"))
     generate.impute.input.wgs(chrom=chrom,

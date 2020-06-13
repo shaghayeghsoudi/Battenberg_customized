@@ -144,12 +144,13 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
  
   if (!skip_phasing) {
     # Setup for parallel computing
-    #clp = parallel::makeCluster(nthreads)
-    #doParallel::registerDoParallel(clp)
+    clp = parallel::makeCluster(nthreads)
+    doParallel::registerDoParallel(clp)
     
-    #uses numeric rather than chromosome names. Change? 
-    #foreach::foreach (chrom=1:length(chrom_names)) %dopar% {
-    for(chrom in 1:length(chrom_names)){
+    foreach::foreach (chrom=1:length(chrom_names)) %dopar% {
+    
+    #switch to non-parallel for full verbose debugging mode
+    #for(chrom in 1:length(chrom_names)){
       run_haplotyping(chrom=chrom, 
                       tumourname=tumourname, 
                       normalname=normalname, 
@@ -166,7 +167,7 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
     }
     
     # Kill the threads as from here its all single core
-    #parallel::stopCluster(clp)
+    parallel::stopCluster(clp)
     
   
 

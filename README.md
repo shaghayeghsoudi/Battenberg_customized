@@ -27,8 +27,9 @@ R -q -e 'devtools::install_github("morinlab/battenberg")'
 #### Required reference files
 
 ### hg19/grch37 ##
-Battenberg requires reference files, for now for GRCh37 only, that can be downloaded from here: https://ora.ox.ac.uk/objects/uuid:2c1fec09-a504-49ab-9ce9-3f17bac531bc
-# These files work as-is with non-prefixed chromosome names. Many of the files will need to be modified before they can be used with bams that contain chr-prefixed chromosome names
+Battenberg requires reference files for GRCh37 can be downloaded from here: https://ora.ox.ac.uk/objects/uuid:2c1fec09-a504-49ab-9ce9-3f17bac531bc. Support for hg38 is now available (see below).
+
+These files work as-is with non-prefixed chromosome names. Many of the files will need to be modified before they can be used with bams that contain chr-prefixed chromosome names
 The bundle contains the following files:
 
   * battenberg_1000genomesloci2012_v3.tar.gz

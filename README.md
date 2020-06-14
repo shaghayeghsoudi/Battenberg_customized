@@ -45,6 +45,7 @@ The bundle contains the following files:
   * [GC correction: battenberg_hg38_gc_correction.tar.gz](https://www.bcgsc.ca/downloads/morinlab/reference/battenberg_hg38_gc_correction.tar.gz)
   * [Replication timing correction: battenberg_hg38_replic_correction.tar.gz](https://www.bcgsc.ca/downloads/morinlab/reference/battenberg_hg38_replic_correction.tar.gz)
   * [Impute reference package: battenberg_impute_hg38.tar.gz](https://www.bcgsc.ca/downloads/morinlab/reference/battenberg_impute_hg38.tar.gz)
+  * [Problematic loci: probloci_hg38.txt.gz](https://www.bcgsc.ca/downloads/morinlab/reference/probloci_hg38.txt.gz)
 
 #### Pipeline
 

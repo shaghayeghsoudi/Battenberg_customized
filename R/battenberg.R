@@ -211,12 +211,17 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
                   read_depth=30)
   
   # Go over all segments, determine which segements are a mixture of two states and fit a second CN state
+  if(chr_prefixed){
+    fig_prefix = "_subclones_"
+  }else{
+    fig_prefix = "_subclones_chr"
+  }
   callSubclones(sample.name=tumourname, 
                 baf.segmented.file=paste(tumourname, ".BAFsegmented.txt", sep=""), 
                 logr.file=logr_file, 
                 rho.psi.file=paste(tumourname, "_rho_and_psi.txt",sep=""), 
                 output.file=paste(tumourname,"_subclones.txt", sep=""), 
-                output.figures.prefix=paste(tumourname,"_subclones_chr", sep=""), 
+                output.figures.prefix=paste(tumourname,fig_prefix, sep=""), 
                 output.gw.figures.prefix=paste(tumourname,"_BattenbergProfile", sep=""),
                 masking_output_file=paste(tumourname, "_segment_masking_details.txt", sep=""),
                 prior_breakpoints_file=prior_breakpoints_file,

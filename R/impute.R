@@ -11,7 +11,7 @@
 #' @param seed The seed to be set
 #' @author dw9
 #' @export
-run.impute = function(inputfile, outputfile.prefix, is.male, imputeinfofile, impute.exe="impute2", region.size=5000000, chrom=NA, seed=as.integer(Sys.time())) {
+run.impute = function(inputfile, outputfile.prefix, is.male, imputeinfofile, impute.exe="impute2", region.size=5000000, chrom=NA, seed=as.integer(Sys.time()),logfile_prefix = "./") {
   # Read in the impute file information
   impute.info = parse.imputeinfofile(imputeinfofile, is.male, chrom=chrom)
   # Run impute for each region of the size specified above
@@ -145,7 +145,7 @@ combine.impute.output = function(inputfile.prefix, outputfile, is.male, imputein
 #' @author sd11
 #' @export
 run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile, problemloci, impute_exe, min_normal_depth, chrom_names,
-                           snp6_reference_info_file=NA, heterozygousFilter=NA,chr_prefixed = FALSE) {
+                           snp6_reference_info_file=NA, heterozygousFilter=NA,chr_prefixed = FALSE, logfile_prefix="./") {
   print("Running modified haplotyping")
   #uses numeric (1-23) chromosome names, should this change?
   af_prefix = "_alleleFrequencies_chr"
@@ -190,7 +190,8 @@ run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile
              imputeinfofile=imputeinfofile,
              impute.exe=impute_exe,
              region.size=region_size,
-             chrom=chrom)
+             chrom=chrom,
+             logfile_prefix = lofile_prefix)
 
   # As impute runs in windows across a chromosome we need to assemble the output
   combine.impute.output(inputfile.prefix=paste(tumourname, imp_prefix_o, chrom, ".txt", sep=""),
@@ -244,5 +245,5 @@ run_haplotyping = function(chrom, tumourname, normalname, ismale, imputeinfofile
   # for debugging, don't cleanup
 
 
-  #unlink(paste(tumourname, "_impute_output_chr", chrom, ".txt*K.txt*", sep=""))
+  unlink(paste(tumourname, "_impute_output_chr", chrom, ".txt*K.txt*", sep=""))
 }

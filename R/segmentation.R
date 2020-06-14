@@ -119,7 +119,7 @@ segment.baf.phased.legacy = function(samplename, inputfile, outputfile, gamma=10
       res = selectFastPcf(BAFphased,kmin,gamma*sdev,T)
       BAFphseg = res$yhat
     }
-    if(chr_prefix{
+    if(chr_prefixed){
       png(filename = paste(samplename,"_segment_",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
     }else{
       png(filename = paste(samplename,"_segment_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)

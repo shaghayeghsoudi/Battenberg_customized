@@ -1,6 +1,7 @@
 # Battenberg
 
-This repository contains code for the whole genome sequencing subclonal copy number caller Battenberg, as described in [Nik-Zainal, Van Loo, Wedge, et al. (2012), Cell](https://www.ncbi.nlm.nih.gov/pubmed/22608083).
+This repository contains code for the whole genome sequencing subclonal copy number caller Battenberg, as described in [Nik-Zainal, Van Loo, Wedge, et al. (2012), Cell](https://www.ncbi.nlm.nih.gov/pubmed/22608083). 
+The code was forked from Wedge-Oxford/battenberg and modified to function with hg38 genomes with chr prefixed chromosome names. 
 
 ## Installation instructions
 
@@ -20,13 +21,14 @@ R -q -e 'devtools::install_github("Crick-CancerGenomics/ascat/ASCAT")'
 To install Battenberg, run the following from the command line:
 
 ```
-R -q -e 'devtools::install_github("Wedge-Oxford/battenberg")'
+R -q -e 'devtools::install_github("morinlab/battenberg")'
 ```
 
 #### Required reference files
 
+### hg19/grch37 ##
 Battenberg requires reference files, for now for GRCh37 only, that can be downloaded from here: https://ora.ox.ac.uk/objects/uuid:2c1fec09-a504-49ab-9ce9-3f17bac531bc
-
+# These files work as-is with non-prefixed chromosome names. Many of the files will need to be modified before they can be used with bams that contain chr-prefixed chromosome names
 The bundle contains the following files:
 
   * battenberg_1000genomesloci2012_v3.tar.gz
@@ -36,7 +38,14 @@ The bundle contains the following files:
   * battenberg_wgs_replic_correction_1000g_v3.tar.gz
   * battenberg_snp6_exe.tgz (SNP6 only)
   * battenberg_snp6_ref.tgz (SNP6 only)
-  
+
+### hg38/grch38 ##
+
+  * [Loci: battenberg_1000genomesloci_hg38.tar.gz](https://www.bcgsc.ca/downloads/morinlab/reference/battenberg_1000genomesloci_hg38.tar.gz)
+  * [GC correction: battenberg_hg38_gc_correction.tar.gz](https://www.bcgsc.ca/downloads/morinlab/reference/battenberg_hg38_gc_correction.tar.gz)
+  * [Replication timing correction: battenberg_hg38_replic_correction.tar.gz](https://www.bcgsc.ca/downloads/morinlab/reference/battenberg_hg38_replic_correction.tar.gz)
+  * [Impute reference package: battenberg_impute_hg38.tar.gz](https://www.bcgsc.ca/downloads/morinlab/reference/battenberg_impute_hg38.tar.gz)
+
 #### Pipeline
 
 Go into ```inst/example``` for example WGS and SNP6 R-only pipelines.
@@ -103,52 +112,4 @@ Finally, a range of plots show intermediate steps and can occasionally be useful
 
 Battenberg can take prior breakpoints, from structural variants (SVs) for example, as input. SV breakpoints are typically much more precise and a pair of SVs can be closer together then what typically can be obtained from a BAF or coverage track. It is therefore adventageous to include prior breakpoints in a Battenberg run. However, including too many (as in 100s) incorrect breakpoints can have adverse effects by allowing many small segments to be affected by noise where there isn't any signal and increasing the runtime of the pipeline. It is therefore advised to `filter prior breakpoints from SVs such that the genome is slightly oversegmented.` Finally, some SV types, such as inversions, do not constitute a change in copy number and therefore also add breakpoints that should not be considered. It is therefore also advised to `filter breakpoints from SVs that do not cause a change in copynumber, such as inversions`.
 
-## Docker - experimental
 
-Battenberg can be run inside a Docker container. Please follow the instructions below.
-
-#### Installation
-
-```
-git clone git@github.com:Wedge-Oxford/battenberg.git
-cd battenberg
-docker build -t battenberg:2.2.9 .
-```
-
-#### Reference data
-
-First, download the Battenberg reference data from the URL provided further in this README. Then in the ```impute_info.txt``` file, replace the paths to the reference files with ```/opt/battenberg_reference```. I.e. the path to the first legend file should become:
-
-```
-/opt/battenberg_reference/1000genomes_2012_v3_impute/ALL_1000G_phase1integrated_v3_chr1_impute.legend
-```
-
-#### Run interactively
-
-These commands run the Battenberg pipeline within a Docker container in interactive mode. This command assumes the data is available locally in `$PWD/data/pcawg/HCC1143_ds` and the reference files have been placed in `$PWD/battenberg_reference`
-
-```
-docker run -it -v `pwd`/data/pcawg/HCC1143_ds:/mnt/battenberg/ -v `pwd`/battenberg_reference:/opt/battenberg_reference battenberg:2.2.8
-```
-
-Within the Docker terminal run the pipeline, in this case on the ICGC PCAWG testing data available [here](https://s3-eu-west-1.amazonaws.com/wtsi-pancancer/testdata/HCC1143_ds.tar).
-
-```
-R CMD BATCH '--no-restore-data --no-save --args -t HCC1143 -n HCC1143_BL --nb /mnt/battenberg/HCC1143_BL.bam --tb /mnt/battenberg/HCC1143.bam --sex female -o /mnt/battenberg/' /usr/local/bin/battenberg_wgs.R /mnt/battenberg/battenberg.Rout
-```
-  
-### Building a release
-
-In RStudio: In the Build tab, click Check Package
-
-Then open the ```NAMESPACE``` file and edit:
-
-```
-S3method(plot,haplotype.data)
-```  
-
-to:
-
-```
-export(plot.haplotype.data)
-```

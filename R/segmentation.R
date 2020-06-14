@@ -387,7 +387,7 @@ segment.baf.phased = function(samplename, inputfile, outputfile, prior_breakpoin
     dev.off()
     if(chr_prefixed){
       png(filename = paste(samplename,"_segment_",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
-    else{
+    }else{
       png(filename = paste(samplename,"_segment_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
     }
     

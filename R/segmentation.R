@@ -63,7 +63,7 @@ segment.baf.phased.legacy = function(samplename, inputfile, outputfile, gamma=10
 #' @param phasekmin Kmin parameter used when correcting phasing mistakes (Default: 3)
 #' @author dw9
 #' @export
-segment.baf.phased.legacy = function(samplename, inputfile, outputfile, gamma=10, phasegamma=3, kmin=3, phasekmin=3) {
+segment.baf.phased.legacy = function(samplename, inputfile, outputfile, gamma=10, phasegamma=3, kmin=3, phasekmin=3,chr_prefix=FALSE) {
   BAFraw = as.data.frame(read_baf(inputfile))
   
   BAFoutput = NULL
@@ -95,8 +95,12 @@ segment.baf.phased.legacy = function(samplename, inputfile, outputfile, gamma=10
       res= selectFastPcf(BAF,phasekmin,phasegamma*sdev,T)
       BAFsegm = res$yhat
     }
+    if(chr_prefix{
+      png(filename = paste(samplename,"_RAFseg_",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
+    }else{
+      png(filename = paste(samplename,"_RAFseg_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
+    }
     
-    png(filename = paste(samplename,"_RAFseg_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
     create.segmented.plot(chrom.position=pos/1000000, 
                           points.red=BAF, 
                           points.green=BAFsegm, 
@@ -115,8 +119,11 @@ segment.baf.phased.legacy = function(samplename, inputfile, outputfile, gamma=10
       res = selectFastPcf(BAFphased,kmin,gamma*sdev,T)
       BAFphseg = res$yhat
     }
-    
-    png(filename = paste(samplename,"_segment_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
+    if(chr_prefix{
+      png(filename = paste(samplename,"_segment_",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
+    }else{
+      png(filename = paste(samplename,"_segment_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
+    }
     create.baf.plot(chrom.position=pos/1000000, 
                     points.red.blue=BAF, 
                     plot.red=BAFsegm>0.5,
@@ -175,7 +182,7 @@ segment.baf.phased.sv = function(samplename, inputfile, outputfile, svs=NULL, ga
 #' @param calc_seg_baf_option Various options to recalculate the BAF of a segment. Options are: 1 - median, 2 - mean, 3 - ifelse median==0 or 1, median, mean. (Default: 3)
 #' @author sd11
 #' @export
-segment.baf.phased = function(samplename, inputfile, outputfile, prior_breakpoints_file=NULL, gamma=10, phasegamma=3, kmin=3, phasekmin=3, no_segmentation=F, calc_seg_baf_option=3) {
+segment.baf.phased = function(samplename, inputfile, outputfile, prior_breakpoints_file=NULL, gamma=10, phasegamma=3, kmin=3, phasekmin=3, no_segmentation=F, calc_seg_baf_option=3, chr_prefixed=FALSE) {
   # Function that takes SNPs that belong to a single segment and looks for big holes between
   # each pair of SNPs. If there is a big hole it will add another breakpoint to the breakpoints data.frame
   addin_bigholes = function(breakpoints, positions, chrom, startpos, maxsnpdist) {
@@ -268,7 +275,7 @@ segment.baf.phased = function(samplename, inputfile, outputfile, prior_breakpoin
   # @param gamma
   # @param no_segmentation Do not perform segmentation. This step will switch the haplotype blocks, but then just takes the mean BAFphased as BAFsegm
   # @return A data.frame with columns Chromosome,Position,BAF,BAFphased,BAFseg
-  run_pcf = function(BAFrawchr, presegment_chrom_start, presegment_chrom_end, phasekmin, phasegamma, kmin, gamma, no_segmentation=F) {
+  run_pcf = function(BAFrawchr, presegment_chrom_start, presegment_chrom_end, phasekmin, phasegamma, kmin, gamma, no_segmentation=F, chr_prefixed = FALSE) {
     row.indices = which(BAFrawchr$Position >= presegment_chrom_start & 
                           BAFrawchr$Position <= presegment_chrom_end)
     
@@ -360,11 +367,14 @@ segment.baf.phased = function(samplename, inputfile, outputfile, prior_breakpoin
     BAFoutputchr = NULL
     
     for (r in 1:nrow(breakpoints_chrom)) {
-      BAFoutput_preseg = run_pcf(BAFrawchr, breakpoints_chrom$start[r], breakpoints_chrom$end[r], phasekmin, phasegamma, kmin, gamma, no_segmentation)
+      BAFoutput_preseg = run_pcf(BAFrawchr, breakpoints_chrom$start[r], breakpoints_chrom$end[r], phasekmin, phasegamma, kmin, gamma, no_segmentation, chr_prefixed=chr_prefixed)
       BAFoutputchr = rbind(BAFoutputchr, BAFoutput_preseg)
     }
-    
-    png(filename = paste(samplename,"_RAFseg_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
+    if(chr_prefixed){
+       png(filename = paste(samplename,"_RAFseg_",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
+    }else{
+      png(filename = paste(samplename,"_RAFseg_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
+    }
     create.segmented.plot(chrom.position=BAFoutputchr$Position/1000000, 
                           points.red=BAFoutputchr$BAF, 
                           points.green=BAFoutputchr$tempBAFsegm, 
@@ -375,8 +385,12 @@ segment.baf.phased = function(samplename, inputfile, outputfile, prior_breakpoin
                           ylab="BAF (phased)",
                           prior_bkps_pos=bkps_chrom$position/1000000)
     dev.off()
+    if(chr_prefixed){
+      png(filename = paste(samplename,"_segment_",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
+    else{
+      png(filename = paste(samplename,"_segment_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
+    }
     
-    png(filename = paste(samplename,"_segment_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
     create.baf.plot(chrom.position=BAFoutputchr$Position/1000000, 
                     points.red.blue=BAFoutputchr$BAF, 
                     plot.red=BAFoutputchr$tempBAFsegm>0.5,

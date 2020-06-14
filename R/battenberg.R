@@ -187,7 +187,8 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
                      phasegamma=phasing_gamma,
                      kmin=segmentation_kmin,
                      phasekmin=phasing_kmin,
-                     calc_seg_baf_option=calc_seg_baf_option)
+                     calc_seg_baf_option=calc_seg_baf_option,
+                     chr_prefixed=chr_prefixed)
   
   # Fit a clonal copy number profile
   fit.copy.number(samplename=tumourname,

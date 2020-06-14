@@ -58,29 +58,29 @@ getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix,
                           samplename="sample1", 
                           seed=as.integer(Sys.time()),
                           chr_prefixed=FALSE,
-                          VERBOSE=FALSE) {
+                          verbose=FALSE) {
   
   set.seed(seed)
   
   input_data = concatenateAlleleCountFiles(tumourAlleleCountsFile.prefix, ".txt", length(chr_names))
   normal_input_data = concatenateAlleleCountFiles(normalAlleleCountsFile.prefix, ".txt", length(chr_names))
   allele_data = concatenateG1000SnpFiles(g1000file.prefix, ".txt", length(chr_names), chr_names)
-  if(VERBOSE){
+  if(verbose){
     print(paste("CHROMS:",chr_names))
   }
   # Synchronise all the data frames
   chrpos_allele = paste(allele_data[,1], "_", allele_data[,2], sep="")
-  if(VERBOSE){
+  if(verbose){
     print("1/4")
     print(head(allele_data))
   }
   chrpos_normal = paste(normal_input_data[,1], "_", normal_input_data[,2], sep="")
-  if(VERBOSE){
+  if(verbose){
     print("2/4")
     print(head(normal_input_data))
   }
   chrpos_tumour = paste(input_data[,1], "_", input_data[,2], sep="")
-  if(VERBOSE){
+  if(verbose){
     print("3/4")
     print(head(input_data))
   }
@@ -432,7 +432,7 @@ gc.correct.wgs = function(Tumour_LogR_file, outfile, correlations_outfile, gc_co
 #' @author sd11
 #' @export
 prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname, g1000allelesprefix, g1000prefix, gccorrectprefix, 
-                       repliccorrectprefix, min_base_qual, min_map_qual, allelecounter_exe, min_normal_depth, nthreads, skip_allele_counting, chr_prefixed=FALSE, VERBOSE=FALSE) {
+                       repliccorrectprefix, min_base_qual, min_map_qual, allelecounter_exe, min_normal_depth, nthreads, skip_allele_counting, chr_prefixed=FALSE, verbose=FALSE) {
   
   requireNamespace("foreach")
   requireNamespace("doParallel")
@@ -457,7 +457,7 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
                       allelecounter.exe=allelecounter_exe)
     }
   }
-  if(VERBOSE){
+  if(verbose){
     print(paste("CHROMS:",chrom_names))
     print("getBAFsAndLogRs")
   }
@@ -479,7 +479,7 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
                   minCounts=min_normal_depth,
                   samplename=tumourname,
                   chr_prefixed=chr_prefixed,
-                  VERBOSE=VERBOSE)
+                  verbose=verbose)
 
   # Perform GC correction
   gc.correct.wgs(Tumour_LogR_file=paste(tumourname,"_mutantLogR.tab", sep=""),

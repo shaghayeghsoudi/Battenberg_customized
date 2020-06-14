@@ -480,9 +480,7 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
                   samplename=tumourname,
                   chr_prefixed=chr_prefixed,
                   VERBOSE=VERBOSE)
-  if(VERBOSE){
-    print("GC CORRECTION")
-  }
+
   # Perform GC correction
   gc.correct.wgs(Tumour_LogR_file=paste(tumourname,"_mutantLogR.tab", sep=""),
                  outfile=paste(tumourname,"_mutantLogR_gcCorrected.tab", sep=""),

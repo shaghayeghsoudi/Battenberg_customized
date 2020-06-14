@@ -113,7 +113,7 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
                   min_normal_depth=min_normal_depth, 
                   nthreads=nthreads,
                   skip_allele_counting=skip_allele_counting,
-                  chr_prefixed=chr_prefixed,VERBOSE=VERBOSE)
+                  chr_prefixed=chr_prefixed,verbose=verbose)
       
       # Kill the threads
       parallel::stopCluster(clp)

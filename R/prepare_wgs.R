@@ -147,7 +147,7 @@ getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix,
   tumor.BAF = data.frame(Chromosome=input_data$CHR[indices], Position=input_data$POS[indices], baf=mutantBAF)
   tumor.LogR = data.frame(Chromosome=input_data$CHR[indices], Position=input_data$POS[indices], samplename=log2(mutantLogR/mean(mutantLogR, na.rm=T)))	
   alleleCounts = data.frame(Chromosome=input_data$CHR[indices], Position=input_data$POS[indices], mutCountT1=mutCount1, mutCountT2=mutCount2, mutCountN1=normCount1, mutCountN2=normCount2)
-  if(VERBOSE){
+  if(verbose){
     print("outputting logR and BAF data to disk")
   }
   # Save data.frames to disk

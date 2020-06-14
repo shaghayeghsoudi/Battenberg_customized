@@ -63,7 +63,7 @@ segment.baf.phased.legacy = function(samplename, inputfile, outputfile, gamma=10
 #' @param phasekmin Kmin parameter used when correcting phasing mistakes (Default: 3)
 #' @author dw9
 #' @export
-segment.baf.phased.legacy = function(samplename, inputfile, outputfile, gamma=10, phasegamma=3, kmin=3, phasekmin=3,chr_prefix=FALSE) {
+segment.baf.phased.legacy = function(samplename, inputfile, outputfile, gamma=10, phasegamma=3, kmin=3, phasekmin=3,chr_prefixed=FALSE) {
   BAFraw = as.data.frame(read_baf(inputfile))
   
   BAFoutput = NULL
@@ -95,7 +95,7 @@ segment.baf.phased.legacy = function(samplename, inputfile, outputfile, gamma=10
       res= selectFastPcf(BAF,phasekmin,phasegamma*sdev,T)
       BAFsegm = res$yhat
     }
-    if(chr_prefix{
+    if(chr_prefixed){
       png(filename = paste(samplename,"_RAFseg_",chr,".png",sep=""), width = 2000, height = 1000, res = 200)
     }else{
       png(filename = paste(samplename,"_RAFseg_chr",chr,".png",sep=""), width = 2000, height = 1000, res = 200)

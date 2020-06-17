@@ -61,8 +61,9 @@ getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix,
                           verbose=FALSE) {
   
   set.seed(seed)
-  
+  print("Tumour:")
   input_data = concatenateAlleleCountFiles(tumourAlleleCountsFile.prefix, ".txt", length(chr_names))
+  print("Normal:")
   normal_input_data = concatenateAlleleCountFiles(normalAlleleCountsFile.prefix, ".txt", length(chr_names))
   allele_data = concatenateG1000SnpFiles(g1000file.prefix, ".txt", length(chr_names), chr_names)
   if(verbose){
@@ -466,6 +467,7 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
   if(chr_prefixed){
     af_prefix = "_alleleFrequencies_"
   }
+  print(paste("Prefix:",af_prefix))
   getBAFsAndLogRs(tumourAlleleCountsFile.prefix=paste(tumourname,af_prefix, sep=""),
                   normalAlleleCountsFile.prefix=paste(normalname,af_prefix, sep=""),
                   figuresFile.prefix=paste(tumourname, "_", sep=''),

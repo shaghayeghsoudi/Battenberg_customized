@@ -61,9 +61,13 @@ getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix,
                           verbose=FALSE) {
   
   set.seed(seed)
-  print("Tumour:")
+  if(verbose){
+    print("Tumour:")
+  }
   input_data = concatenateAlleleCountFiles(tumourAlleleCountsFile.prefix, ".txt", length(chr_names))
-  print("Normal:")
+  if(verbose){
+    print("Normal:")
+  }
   normal_input_data = concatenateAlleleCountFiles(normalAlleleCountsFile.prefix, ".txt", length(chr_names))
   allele_data = concatenateG1000SnpFiles(g1000file.prefix, ".txt", length(chr_names), chr_names)
   if(verbose){

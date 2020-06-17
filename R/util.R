@@ -121,7 +121,9 @@ concatenateAlleleCountFiles = function(inputStart, inputEnd, no.chrs) {
       #filename = paste(inputStart, chrom, inputEnd, sep="")
     #}
     # Only add files that exist and have data
+    print(filename)
     if(file.exists(filename) && file.info(filename)$size>0) {
+      print(paste0("found",filename))
       infiles = c(infiles, filename)
     }
   }

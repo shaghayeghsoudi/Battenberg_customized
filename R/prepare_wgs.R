@@ -463,10 +463,10 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
     print("getBAFsAndLogRs")
   }
   # Obtain BAF and LogR from the raw allele counts
-  af_prefix = "_alleleFrequencies_chr"
-  if(chr_prefixed){
-    af_prefix = "_alleleFrequencies_"
-  }
+  af_prefix = "_alleleFrequencies_"
+  #if(chr_prefixed){
+  #  af_prefix = "_alleleFrequencies_"
+  #}
   print(paste("Prefix:",af_prefix))
   getBAFsAndLogRs(tumourAlleleCountsFile.prefix=paste(tumourname,af_prefix, sep=""),
                   normalAlleleCountsFile.prefix=paste(normalname,af_prefix, sep=""),

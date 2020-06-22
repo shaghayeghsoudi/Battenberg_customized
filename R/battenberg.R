@@ -1,5 +1,3 @@
-source("/projects/rmorin/projects/gambl-repos/gambl-rmorin/src/R/battenberg/R/impute.R")
-#devtools::load_all(path="/projects/rmorin/projects/gambl-repos/gambl-rmorin/src/R/battenberg")
 
 #' Run the Battenberg pipeline
 #' 

@@ -7,16 +7,26 @@
 #' @param min.base.qual The minimum base quality required for it to be counted (optional, default=20).
 #' @param min.map.qual The minimum mapping quality required for it to be counted (optional, default=35).
 #' @param allelecounter.exe A pointer to where the alleleCounter executable can be found (optional, default points to $PATH).
+#' @param ref_fasta A full path to the fasta reference file used (optional but needed for CRAM support)
 #' @author sd11
 #' @export
-getAlleleCounts = function(bam.file, output.file, g1000.loci, min.base.qual=20, min.map.qual=35, allelecounter.exe="alleleCounter") {
-  cmd = paste(allelecounter.exe,
+getAlleleCounts = function(bam.file, output.file, g1000.loci, min.base.qual=20, min.map.qual=35, allelecounter.exe="alleleCounter", ref_fasta="") {
+  if(ref_fasta){
+    cmd = paste(allelecounter.exe,
+              "-b", bam.file,
+              "-l", g1000.loci,
+              "-o", output.file,
+              "-m", min.base.qual,
+              "-q", min.map.qual,
+              "-r", ref_fasta)
+  } else{
+    cmd = paste(allelecounter.exe,
               "-b", bam.file,
               "-l", g1000.loci,
               "-o", output.file,
               "-m", min.base.qual,
               "-q", min.map.qual)
-
+  }
 
   # alleleCount >= v4.0.0 is sped up considerably on 1000G loci when run in dense-snp mode            
   counter_version = system(paste(allelecounter.exe, "--version"), intern = T)
@@ -437,7 +447,8 @@ gc.correct.wgs = function(Tumour_LogR_file, outfile, correlations_outfile, gc_co
 #' @author sd11
 #' @export
 prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname, g1000allelesprefix, g1000prefix, gccorrectprefix, 
-                       repliccorrectprefix, min_base_qual, min_map_qual, allelecounter_exe, min_normal_depth, nthreads, skip_allele_counting, chr_prefixed=FALSE, verbose=FALSE) {
+                       repliccorrectprefix, min_base_qual, min_map_qual, allelecounter_exe, min_normal_depth, nthreads, skip_allele_counting, 
+                       chr_prefixed=FALSE, verbose=FALSE, ref_fasta="") {
   
   requireNamespace("foreach")
   requireNamespace("doParallel")
@@ -452,14 +463,16 @@ prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname
                       g1000.loci=paste(g1000allelesprefix, i, ".txt", sep=""),
                       min.base.qual=min_base_qual,
                       min.map.qual=min_map_qual,
-                      allelecounter.exe=allelecounter_exe)
+                      allelecounter.exe=allelecounter_exe,
+                      ref_fasta=ref_fasta)
   
       getAlleleCounts(bam.file=normalbam,
                       output.file=paste(normalname,"_alleleFrequencies_chr", i, ".txt",  sep=""),
                       g1000.loci=paste(g1000allelesprefix, i, ".txt", sep=""),
                       min.base.qual=min_base_qual,
                       min.map.qual=min_map_qual,
-                      allelecounter.exe=allelecounter_exe)
+                      allelecounter.exe=allelecounter_exe,
+                      ref_fasta=ref_fasta)
     }
   }
   if(verbose){

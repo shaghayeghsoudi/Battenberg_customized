@@ -5,6 +5,7 @@
 #' @param normalname Matched normal identifier, this is used as a prefix for the output files. If allele counts are supplied separately, they are expected to have this identifier as prefix.
 #' @param tumour_data_file A BAM or CEL file for the tumour
 #' @param normal_data_file A BAM or CEL file for the normal
+#' @param reference_fasta Genome fasta file used for alignment (optional but needed for CRAM support)
 #' @param imputeinfofile Full path to a Battenberg impute info file with pointers to Impute2 reference data
 #' @param g1000prefix Full prefix path to 1000 Genomes SNP loci data, as part of the Battenberg reference data
 #' @param problemloci Full path to a problem loci file that contains SNP loci that should be filtered out
@@ -51,7 +52,7 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
                       min_map_qual=35, calc_seg_baf_option=3, skip_allele_counting=F, skip_preprocessing=F, skip_phasing=F,
                       snp6_reference_info_file=NA, apt.probeset.genotype.exe="apt-probeset-genotype", apt.probeset.summarize.exe="apt-probeset-summarize", 
                       norm.geno.clust.exe="normalize_affy_geno_cluster.pl", birdseed_report_file="birdseed.report.txt", heterozygousFilter="none",
-                      prior_breakpoints_file=NULL,chr_prefixed=FALSE,verbose=FALSE,logfile_prefix="./") {
+                      prior_breakpoints_file=NULL,chr_prefixed=FALSE,verbose=FALSE,logfile_prefix="./",ref_fasta=reference_fasta) {
   
   requireNamespace("foreach")
   requireNamespace("doParallel")
@@ -111,7 +112,8 @@ battenberg = function(tumourname, normalname, tumour_data_file, normal_data_file
                   min_normal_depth=min_normal_depth, 
                   nthreads=nthreads,
                   skip_allele_counting=skip_allele_counting,
-                  chr_prefixed=chr_prefixed,verbose=verbose)
+                  chr_prefixed=chr_prefixed,verbose=verbose,
+                  ref_fasta = ref_fasta)
       
       # Kill the threads
       parallel::stopCluster(clp)

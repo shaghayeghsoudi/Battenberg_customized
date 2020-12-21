@@ -10,7 +10,7 @@
 #' @param ref_fasta A full path to the fasta reference file used (optional but needed for CRAM support)
 #' @author sd11
 #' @export
-getAlleleCounts = function(bam.file, output.file, g1000.loci, min.base.qual=20, min.map.qual=35, allelecounter.exe="alleleCounter", ref_fasta="") {
+getAlleleCounts = function(bam.file, output.file, g1000.loci, min.base.qual=20, min.map.qual=35, allelecounter.exe="alleleCounter", ref_fasta=NULL) {
   if(ref_fasta){
     cmd = paste(allelecounter.exe,
               "-b", bam.file,
@@ -207,7 +207,8 @@ getBAFsAndLogRs = function(tumourAlleleCountsFile.prefix,
 #' @param heterozygousFilter The cutoff where a SNP will be considered as heterozygous (default 0.01).
 #' @author dw9, sd11
 #' @export
-generate.impute.input.wgs = function(chrom, tumour.allele.counts.file, normal.allele.counts.file, output.file, imputeinfofile, is.male, problemLociFile=NA, useLociFile=NA, heterozygousFilter=0.1,chr_prefixed=FALSE) {
+generate.impute.input.wgs = function(chrom, tumour.allele.counts.file, normal.allele.counts.file, output.file, imputeinfofile, is.male, problemLociFile=NA, 
+                            useLociFile=NA, heterozygousFilter=0.1,chr_prefixed=FALSE) {
 
   # Read in the 1000 genomes reference file paths for the specified chrom
   impute.info = parse.imputeinfofile(imputeinfofile, is.male, chrom=chrom)
@@ -448,7 +449,7 @@ gc.correct.wgs = function(Tumour_LogR_file, outfile, correlations_outfile, gc_co
 #' @export
 prepare_wgs = function(chrom_names, tumourbam, normalbam, tumourname, normalname, g1000allelesprefix, g1000prefix, gccorrectprefix, 
                        repliccorrectprefix, min_base_qual, min_map_qual, allelecounter_exe, min_normal_depth, nthreads, skip_allele_counting, 
-                       chr_prefixed=FALSE, verbose=FALSE, ref_fasta="") {
+                       chr_prefixed=FALSE, verbose=FALSE, ref_fasta=NULL) {
   
   requireNamespace("foreach")
   requireNamespace("doParallel")

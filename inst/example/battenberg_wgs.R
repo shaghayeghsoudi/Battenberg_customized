@@ -6,6 +6,8 @@ option_list = list(
   make_option(c("-n", "--normalname"), type="character", default=NULL, help="Samplename of the normal", metavar="character"),
   make_option(c("--tb"), type="character", default=NULL, help="Tumour BAM file", metavar="character"),
   make_option(c("--nb"), type="character", default=NULL, help="Normal BAM file", metavar="character"),
+  make_option(c("--min_rho"), type="character", default=NULL, help="min rho value", metavar="character"),
+  make_option(c("--max_rho"), type="character", default=NULL, help="max rho value", metavar="character"),
   make_option(c("--sex"), type="character", default=NULL, help="Sex of the sample", metavar="character"),
   make_option(c("-o", "--output"), type="character", default=NULL, help="Directory where output will be written", metavar="character"),
   make_option(c("--skip_allelecount"), type="logical", default=FALSE, action="store_true", help="Provide when alleles don't have to be counted. This expects allelecount files on disk", metavar="character"),
@@ -23,6 +25,8 @@ NORMALNAME = opt$normalname
 NORMALBAM = opt$nb
 TUMOURBAM = opt$tb
 IS.MALE = opt$sex=="male" | opt$sex=="Male"
+MIN_RHO = opt$min_rho
+MAX_RHO = opt$max_rho
 RUN_DIR = opt$output
 SKIP_ALLELECOUNTING = opt$skip_allelecount
 SKIP_PREPROCESSING = opt$skip_preprocessing
@@ -53,7 +57,7 @@ CLONALITY_DIST_METRIC = 0
 ASCAT_DIST_METRIC = 1
 MIN_PLOIDY = 1.6
 MAX_PLOIDY = 4.8
-MIN_RHO = 0.1
+#MIN_RHO = 0.1
 MIN_GOODNESS_OF_FIT = 0.63
 BALANCED_THRESHOLD = 0.51
 MIN_NORMAL_DEPTH = 10

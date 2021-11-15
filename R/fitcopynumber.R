@@ -24,7 +24,7 @@
 #' @param read_depth Legacy parameter that is no longer used (Default 30)
 #' @author dw9, sd11
 #' @export
-fit.copy.number = function(samplename, outputfile.prefix, inputfile.baf.segmented, inputfile.baf, inputfile.logr, dist_choice, ascat_dist_choice, min.ploidy=1.6, max.ploidy=4.8, min.rho=0.1,  max.rho=1.0, min.goodness=63, uninformative_BAF_threshold=0.51, gamma_param=1, use_preset_rho_psi=F, preset_rho=NA, preset_psi=NA, read_depth=30) {
+fit.copy.number = function(samplename, outputfile.prefix, inputfile.baf.segmented, inputfile.baf, inputfile.logr, dist_choice, ascat_dist_choice, min.ploidy=1.6, max.ploidy=4.8, min.rho=min_rho,  max.rho=max_rho, min.goodness=63, uninformative_BAF_threshold=0.51, gamma_param=1, use_preset_rho_psi=F, preset_rho=NA, preset_psi=NA, read_depth=30) {
   
   assert.file.exists(inputfile.baf.segmented)
   assert.file.exists(inputfile.baf)

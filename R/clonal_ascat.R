@@ -1282,7 +1282,7 @@ find_centroid_of_global_minima <- function( d, ref_seg_matrix, ref_major, ref_mi
 #' @return A list with fields psi, rho and ploidy
 #' @export
 #the limit on rho is lenient and may lead to spurious solutions
-runASCAT = function(lrr, baf, lrrsegmented, bafsegmented, chromosomes, dist_choice, distancepng = NA, copynumberprofilespng = NA, nonroundedprofilepng = NA, cnaStatusFile = "copynumber_solution_status.txt", gamma = 0.55, allow100percent,reliabilityFile=NA,min.ploidy=1.6,max.ploidy=4.8,min.rho=0.1,max.rho=1.0,min.goodness=63, uninformative_BAF_threshold = 0.51, chr.names) {
+runASCAT = function(lrr, baf, lrrsegmented, bafsegmented, chromosomes, dist_choice, distancepng = NA, copynumberprofilespng = NA, nonroundedprofilepng = NA, cnaStatusFile = "copynumber_solution_status.txt", gamma = 0.55, allow100percent,reliabilityFile=NA,min.ploidy=1.6,max.ploidy=4.8,min.rho=min_rho,max.rho=max_rho,min.goodness=63, uninformative_BAF_threshold = 0.51, chr.names) {
   ch = chromosomes
   b = bafsegmented
   r = lrrsegmented[names(bafsegmented)]
@@ -1427,12 +1427,12 @@ runASCAT = function(lrr, baf, lrrsegmented, bafsegmented, chromosomes, dist_choi
     rho_opt1_plot = -1
   }
 
-  # separated plotting from logic: create distanceplot here
-  if (!is.na(distancepng)) {
-    png(filename = distancepng, width = 1000, height = 1000, res = 1000/7)
-  }
-  ASCAT::ascat.plotSunrise(-d, psi_opt1_plot, rho_opt1_plot,minimise)
-  if (!is.na(distancepng)) { dev.off() }
+  # separated plotting from logic: create distanceplot here  ### changing min and max rho gives error here, commented out
+  #if (!is.na(distancepng)) {
+  #  png(filename = distancepng, width = 1000, height = 1000, res = 1000/7)
+  #}
+  #ASCAT::ascat.plotSunrise(-d, psi_opt1_plot, rho_opt1_plot,minimise)
+  #if (!is.na(distancepng)) { dev.off() }
 
 
   if(nropt>0) {

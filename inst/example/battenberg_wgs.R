@@ -6,8 +6,8 @@ option_list = list(
   make_option(c("-n", "--normalname"), type="character", default=NULL, help="Samplename of the normal", metavar="character"),
   make_option(c("--tb"), type="character", default=NULL, help="Tumour BAM file", metavar="character"),
   make_option(c("--nb"), type="character", default=NULL, help="Normal BAM file", metavar="character"),
-  make_option(c("--min_rho"), type="numeric", default=0.1, help="desired min rho value to be used (default value 0.1)", metavar="character"),
-  make_option(c("--max_rho"), type="numeric", default=1, help="desired max rho value to be used (default value 1)", metavar="character"),
+  make_option(c("--min"), type="numeric", default=0.1, help="desired min rho value to be used (default value 0.1)", metavar="character"),
+  make_option(c("--max"), type="numeric", default=1, help="desired max rho value to be used (default value 1)", metavar="character"),
   make_option(c("--sex"), type="character", default=NULL, help="Sex of the sample", metavar="character"),
   make_option(c("-o", "--output"), type="character", default=NULL, help="Directory where output will be written", metavar="character"),
   make_option(c("--skip_allelecount"), type="logical", default=FALSE, action="store_true", help="Provide when alleles don't have to be counted. This expects allelecount files on disk", metavar="character"),
@@ -25,8 +25,8 @@ NORMALNAME = opt$normalname
 NORMALBAM = opt$nb
 TUMOURBAM = opt$tb
 IS.MALE = opt$sex=="male" | opt$sex=="Male"
-MIN_RHO = opt$min_rho
-MAX_RHO = opt$max_rho
+MIN_RHO = opt$min
+MAX_RHO = opt$max
 RUN_DIR = opt$output
 SKIP_ALLELECOUNTING = opt$skip_allelecount
 SKIP_PREPROCESSING = opt$skip_preprocessing

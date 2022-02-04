@@ -4,8 +4,8 @@ library(optparse)
 option_list = list(
   make_option(c("-t", "--tumourname"), type="character", default=NULL, help="Samplename of the tumour", metavar="character"),
   make_option(c("-n", "--normalname"), type="character", default=NULL, help="Samplename of the normal", metavar="character"),
-  make_option(c("--tb"), type="character", default=NULL, help="Tumour BAM file", metavar="character"),
-  make_option(c("--nb"), type="character", default=NULL, help="Normal BAM file", metavar="character"),
+  make_option(c("--tb"), type="character", default=NULL, help="Tumour BAM file"),
+  make_option(c("--nb"), type="character", default=NULL, help="Normal BAM file"),
   make_option(c("--min"), type="numeric", default=0.1, help="desired min rho value to be used (default value 0.1)", metavar="character"),
   make_option(c("--max"), type="numeric", default=1, help="desired max rho value to be used (default value 1)", metavar="character"),
   make_option(c("--sex"), type="character", default=NULL, help="Sex of the sample", metavar="character"),

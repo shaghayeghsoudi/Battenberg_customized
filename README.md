@@ -1,7 +1,10 @@
 
 
+Please Note:
 Modified by Shaghayegh Soudi November 2021
+Two new arguments (min_rho and max_rho) have added to the battenberg_wgs.R script. This is useful for cases where we have a good prediction about the range of purity in our sample which can be obtained from DPclust package. The original battenberg searchs for the purity from the minimum of 0.1 to the maximium of 1 and sometimes overstimate or understimate purity.
 
+--------------------------------------------------------------------------
 # Battenberg
 
 This repository contains code for the whole genome sequencing subclonal copy number caller Battenberg, as described in [Nik-Zainal, Van Loo, Wedge, et al. (2012), Cell](https://www.ncbi.nlm.nih.gov/pubmed/22608083). 
